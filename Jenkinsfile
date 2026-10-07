@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "faraz270903/devops-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -24,6 +29,38 @@ pipeline {
             }
         }
 
+        stage('Package') {
+            steps {
+                echo 'Packaging application'
+                sh 'tar -czf devops-app.tar.gz --exclude=.git --exclude=devops-app.tar.gz .'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                echo 'Building Docker image'
+                sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                echo 'Pushing Docker image to Docker Hub'
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-credentials',
+                        usernameVariable: 'DOCKER_USER',
+                        passwordVariable: 'DOCKER_PASS'
+                    )
+                ]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                        docker logout
+                    '''
+                }
+            }
+        }
     }
 
     post {
