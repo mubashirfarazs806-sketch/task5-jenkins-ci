@@ -32,7 +32,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging application'
-                sh 'tar -czf devops-app.tar.gz --exclude=.git --exclude=devops-app.tar.gz .'
+                sh 'tar -czf ../devops-app.tar.gz --exclude=.git .'
             }
         }
 
