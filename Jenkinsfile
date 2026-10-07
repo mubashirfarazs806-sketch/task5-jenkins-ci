@@ -24,8 +24,8 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo 'Running tests'
-                sh 'echo "Tests completed successfully"'
+                echo 'Running automated tests'
+                sh 'chmod +x test.sh && ./test.sh'
             }
         }
 
