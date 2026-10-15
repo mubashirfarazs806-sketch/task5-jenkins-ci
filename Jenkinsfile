@@ -43,6 +43,19 @@ pipeline {
             }
         }
 
+        stage('Security Scan') {
+            steps {
+                echo 'Scanning Docker image for vulnerabilities'
+
+                sh '''
+                trivy image \
+                --exit-code 1 \
+                --severity HIGH,CRITICAL \
+                ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
+
         stage('Docker Push') {
             steps {
                 echo 'Pushing Docker image to Docker Hub'

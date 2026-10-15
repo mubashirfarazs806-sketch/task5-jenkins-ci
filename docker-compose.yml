@@ -1,0 +1,14 @@
+services:
+  app1:
+    image: faraz270903/devops-app:11
+    container_name: app1
+    ports:
+      - "8081:8080"
+    restart: unless-stopped
+
+  app2:
+    image: faraz270903/devops-app:11
+    container_name: app2
+    ports:
+      - "8082:8080"
+    restart: unless-stopped
